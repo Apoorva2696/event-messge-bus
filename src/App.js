@@ -11,6 +11,10 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: "Oswald",
     fontSize: "80px",
+    heading: {
+      fontWeight: 700,
+      fontSize: "100px",
+    },
   },
 });
 

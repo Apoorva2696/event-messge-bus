@@ -7,12 +7,13 @@ import { withStyles } from "@material-ui/core/styles";
 const styles = {
   root: {
     background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-    borderRadius: 3,
+    borderRadius: 5,
     border: 0,
     color: "white",
-    height: 48,
-    padding: "0 30px",
-    width: "40%",
+    height: 60,
+    padding: "0 20px",
+    width: "70%",
+    margin: "40px",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 };
@@ -37,8 +38,8 @@ const _Home = (props) => {
     <div
       style={{
         backgroundColor: "#cfe8fc",
-        height: "97vh",
-        paddingTop: "20px",
+        height: "100vh",
+        paddingTop: "100px",
       }}
     >
       <Grid container>
@@ -59,12 +60,9 @@ const _Home = (props) => {
           >
             Trigger event 2
           </Button>
-
-          <Typography>
-            Event triggered from {eventInfo[eventInfo.length - 1]}
-          </Typography>
         </Grid>
         <Grid item xs={6}>
+          <Typography variant='heading'>Event List </Typography>
           {eventInfo.map((event) => {
             return <Typography>Event triggered by {event}</Typography>;
           })}

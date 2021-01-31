@@ -25,27 +25,28 @@ export const MessageBus = (() => {
   const _events = {}; //To store all events.
 
   /**
-   * Adds handler to the subscriber list for a particular event.
    * @param event
    * @param callback
-   * @param callbackObj
+   * @param context
    * @private
    */
-  const _on = function (event, callback, callbackObj) {
+    const _on = function (event, callback, context) {
+      // incase the event is not present in the object then, create an empty array
     if (false === _events.hasOwnProperty(event)) {
       _events[event] = [];
-    }
-    _events[event].push({ callback: callback, callbackObj: callbackObj });
+        }
+        //otherwise add the new subscriber to the list
+    _events[event].push({ callback, context });
   };
 
   /**
    * Removes handler from the subscriber list for a particular event.
    * @param event
    * @param callback
-   * @param callbackObj
+   * @param context
    * @private
    */
-  const _off = function (event, callback, callbackObj) {
+  const _off = function (event, callback, context) {
     let eventCount, currentEvent, ctr;
     if (true === _events.hasOwnProperty(event)) {
       currentEvent = _events[event];
@@ -53,7 +54,7 @@ export const MessageBus = (() => {
       for (ctr = 0; ctr < eventCount; ctr = ctr + 1) {
         if (
           callback === currentEvent[ctr].callback &&
-          callbackObj === currentEvent[ctr].callbackObj
+          context === currentEvent[ctr].context
         ) {
           currentEvent.splice(ctr, 1);
           break;
@@ -76,7 +77,7 @@ export const MessageBus = (() => {
       eventCount = currentEvent.length;
       for (ctr = 0; ctr < eventCount; ctr = ctr + 1) {
         //if the context is not provided
-        if ("undefined" === typeof currentEvent[ctr].callbackObj) {
+        if ("undefined" === typeof currentEvent[ctr].context) {
           if ("function" === typeof currentEvent[ctr].callback) {
             console.log(event, " triggered");
             currentEvent[ctr].callback(payload);
@@ -84,7 +85,7 @@ export const MessageBus = (() => {
         } else {
           if ("function" === typeof currentEvent[ctr].callback) {
             currentEvent[ctr].callback.call(
-              currentEvent[ctr].callbackObj,
+              currentEvent[ctr].context,
               payload
             );
           }
@@ -102,30 +103,3 @@ export const MessageBus = (() => {
     trigger: _trigger,
   };
 })();
-
-/**
- * @desc Get an event emitter which only triggers and listens to one event.
- * @example
- * import { getEmitter } from 'modules/MessageBus';
- *
- * const messageBus = getEmitter();
- *
- * messageBus.trigger();
- * messageBus.on( callback, thisObject );
- * messageBus.off( callback, thisObject );
- *
- * @returns {object} - an instance of MessageBus
- */
-export const getEmitter = (eventName = shortid.generate()) => {
-  return {
-    on: (...params) => {
-      return MessageBus.on(eventName, ...params);
-    },
-    off: (...params) => {
-      return MessageBus.off(eventName, ...params);
-    },
-    trigger: (...params) => {
-      return MessageBus.trigger(eventName, ...params);
-    },
-  };
-};
